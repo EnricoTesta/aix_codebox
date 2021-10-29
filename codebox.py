@@ -23,6 +23,11 @@ def get_args():
         metavar='remote_output_directory',
         help='Directory where remote outputs are stored.')
     parser.add_argument(
+        '--remote-custom-code-directory',
+        default= None,
+        metavar='remote_custom_code_directory',
+        help='Directory where remote custom code is stored.')
+    parser.add_argument(
         '--input-directory',
         default= "/codebox/test/sample_input_transform/",
         metavar='input_directory',
@@ -60,20 +65,24 @@ args_dict = get_args()
 logger.info("Syncing input directory...")
 sync_directory(source_directory=args_dict['remote_input_directory'], destination_directory=args_dict['input_directory'])
 
-# STEP 2 - pip install to ensure requirements are fullfilled
+# STEP 2 - Retrieve custom code
+logger.info("Syncing custom code directory...")
+sync_directory(source_directory=args_dict['remote_custom_code_directory'], destination_directory=args_dict['custom_code_directory'])
+
+# STEP 3 - pip install to ensure requirements are fullfilled
 logger.info("Installing custom code...")
 pip_cmd = f"python -m pip install {args_dict['custom_code_directory']}"
 run(pip_cmd, shell=True)
 
 # TODO: remove all internet and network access @ this point. Either spawn process as another user or use iptables on current user.
 
-# STEP 3 - Import Module
+# STEP 4 - Import Module
 logger.info("Importing custom module...")
 custom_module = import_module(f"{args_dict['custom_code_directory'].split('/')[-1]}.main") # expect to import process & transform
 process = getattr(custom_module, 'process')
 transform = getattr(custom_module, 'transform')
 
-# STEP 4 - Run Custom Code
+# STEP 5 - Run Custom Code
 if args_dict['run_mode'] == 'process':
     logger.info("Running process function...")
     try:
@@ -91,5 +100,5 @@ else:
 
 # TODO: restore network access @ this point
 
-# STEP 5 - Export outputs
+# STEP 6 - Export outputs
 sync_directory(source_directory=args_dict['output_directory'], destination_directory=args_dict['remote_output_directory'])

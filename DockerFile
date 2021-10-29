@@ -1,0 +1,30 @@
+FROM python:3.10.0-buster
+WORKDIR /root
+
+# Installs google cloud sdk, this is mostly for using gsutil to export model.
+RUN apt-get update -y && \
+    pip install google-cloud-storage==1.42.3 && \
+    wget -nv \
+    https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz && \
+    mkdir /root/tools && \
+    tar xvzf google-cloud-sdk.tar.gz -C /root/tools && \
+    rm google-cloud-sdk.tar.gz && \
+    /root/tools/google-cloud-sdk/install.sh --usage-reporting=false \
+        --path-update=false --bash-completion=false \
+        --disable-installation-options && \
+    rm -rf /root/.config/* && \
+    ln -s /root/.config /config && \
+    # Remove the backup directory that gcloud creates
+    rm -rf /root/tools/google-cloud-sdk/.install/.backup && \
+    echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg && \
+    mkdir /root/codebox && \
+    apt-get clean
+
+# Path configuration
+ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
+
+# Copies necessary code
+COPY codebox.py /root/codebox/codebox.py
+
+# Sets up the entry point to invoke the trainer.
+ENTRYPOINT ["python3", "codebox/codebox.py"]

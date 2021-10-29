@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', '${_GCR_URL}/$PROJECT_ID/codebox:codebox', '-f', './DockerFile', '.' ]
+  timeout: 600s
+images:
+  - '${_GCR_URL}/$PROJECT_ID/codebox:codebox'
+timeout: 600s

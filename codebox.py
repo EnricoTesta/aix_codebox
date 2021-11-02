@@ -1,6 +1,5 @@
 import os
 from utils import get_codebox_args, sync_directory
-from importlib import import_module
 from subprocess import run
 from logging import getLogger, basicConfig, DEBUG
 
@@ -30,27 +29,14 @@ run(pip_cmd, shell=True)
 
 # TODO: remove all internet and network access @ this point. Either spawn process as another user or use iptables on current user.
 
-# STEP 4 - Import Module
-logger.info("Importing custom module...")
-custom_module = import_module(f"{args_dict['custom_code_directory'].split('/')[-1]}.main") # expect to import process & transform
-process = getattr(custom_module, 'process')
-transform = getattr(custom_module, 'transform')
+input_dir_arg = f"--input-directory={args_dict['input_directory']}"
+output_dir_arg = f"--output-directory={args_dict['output_directory']}"
+custom_code_dir_arg = f"--custom-code-directory={args_dict['custom_code_directory']}"
+vault_log_dir_arg = f"--log-directory={args_dict['vault_log_directory']}"
+run_mode_arg = f"--run-mode={args_dict['run_mode']}"
 
-# STEP 5 - Run Custom Code
-if args_dict['run_mode'] == 'process':
-    logger.info("Running process function...")
-    try:
-        process(input_directory=args_dict['input_directory'], output_directory=args_dict['output_directory'])
-    except Exception as e:
-        pass # get stacktrace
-elif args_dict['run_mode'] == 'transform':
-    logger.info("Running transform function...")
-    try:
-        transform(input_directory=args_dict['input_directory'], output_directory=args_dict['output_directory'])
-    except Exception as e:
-        pass # get stacktrace
-else:
-    raise ValueError(f"Run mode must be either 'process' or 'transform'. Found {args_dict['run_mode']}")
+vault_cmd = f"python vault.py {input_dir_arg} {output_dir_arg} {custom_code_dir_arg} {vault_log_dir_arg} {run_mode_arg}"
+vault_process = run(vault_cmd, shell=True, capture_output=True)
 
 # TODO: restore network access @ this point
 

@@ -1,11 +1,12 @@
 import os
-from utils import get_args, sync_directory
+from utils import get_codebox_args, sync_directory
 from importlib import import_module
 from subprocess import run
 from logging import getLogger, basicConfig, DEBUG
 
 
-args_dict = get_args()
+args_dict = get_codebox_args()
+# TODO: trace execution metadata (timing, memory, ...)
 
 basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
                     filemode='a',

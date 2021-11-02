@@ -7,7 +7,7 @@ import os
 with open(os.path.join(os.path.dirname(__file__), 'defaults.yaml'), 'r') as f:
     DEFAULTS = safe_load(f)
 
-def get_args():
+def get_codebox_args():
     """Argument parser.
     Returns:
       Dictionary of arguments.

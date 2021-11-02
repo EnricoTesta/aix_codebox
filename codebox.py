@@ -8,7 +8,7 @@ args_dict = get_codebox_args()
 # TODO: trace execution metadata (timing, memory, ...)
 
 basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
-                    filemode='a',
+                    filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=DEBUG)
 logger = getLogger('codebox_logger')

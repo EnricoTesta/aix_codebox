@@ -24,6 +24,7 @@ RUN apt-get update -y && \
 ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
 
 # Copies necessary code
+COPY utils.py /root/codebox/utils.py
 COPY codebox.py /root/codebox/codebox.py
 
 # Sets up the entry point to invoke the trainer.

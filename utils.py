@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from subprocess import check_call
+from subprocess import run
 from yaml import safe_load
 import os
 
@@ -65,6 +65,6 @@ def get_args():
 def sync_directory(source_directory=None, destination_directory=None, environment='GCP'):
     if environment == 'GCP':
         get_input_dir_cmd = f"gsutil -m rsync {source_directory} {destination_directory}"
-        check_call(get_input_dir_cmd)
+        run(get_input_dir_cmd, shell=True)
     else:
         raise NotImplementedError

@@ -1,10 +1,10 @@
+import os
 from argparse import ArgumentParser
 from importlib import import_module
 from subprocess import check_call, run
-from logging import getLogger
+from logging import getLogger, basicConfig, DEBUG
 
 
-logger = getLogger('codebox_logger')
 
 def get_args():
     """Argument parser.
@@ -28,6 +28,11 @@ def get_args():
         metavar='remote_custom_code_directory',
         help='Directory where remote custom code is stored.')
     parser.add_argument(
+        '--remote-log-directory',
+        default= None,
+        metavar='remote_log_directory',
+        help='Directory containing execution logs.')
+    parser.add_argument(
         '--input-directory',
         default= "/codebox/test/sample_input_transform/",
         metavar='input_directory',
@@ -42,6 +47,11 @@ def get_args():
         default= "/codebox/sample_code",
         metavar='custom_code_directory',
         help='Directory containing custom code.')
+    parser.add_argument(
+        '--log-directory',
+        default= "/codebox/",
+        metavar='log_directory',
+        help='Directory containing execution logs.')
     parser.add_argument(
         '--run-mode',
         default='transform',
@@ -58,8 +68,15 @@ def sync_directory(source_directory=None, destination_directory=None, environmen
     else:
         raise NotImplementedError
 
-logger.info("Getting arguments...")
+
 args_dict = get_args()
+
+basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
+                    filemode='a',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=DEBUG)
+logger = getLogger('codebox_logger')
+logger.info("Logging started...")
 
 # STEP 1 - Retrieve remote input directory
 logger.info("Syncing input directory...")
@@ -102,3 +119,4 @@ else:
 
 # STEP 6 - Export outputs
 sync_directory(source_directory=args_dict['output_directory'], destination_directory=args_dict['remote_output_directory'])
+sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])

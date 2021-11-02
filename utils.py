@@ -1,6 +1,11 @@
 from argparse import ArgumentParser
 from subprocess import check_call
+from yaml import safe_load
+import os
 
+
+with open(os.path.join(os.path.dirname(__file__), 'defaults.yaml'), 'r') as f:
+    DEFAULTS = safe_load(f)
 
 def get_args():
     """Argument parser.
@@ -10,47 +15,47 @@ def get_args():
     parser = ArgumentParser()
     parser.add_argument(
         '--remote-input-directory',
-        default= None,
+        default= DEFAULTS['remote_input_directory'],
         metavar='remote_input_directory',
         help='Directory where remote inputs are stored.')
     parser.add_argument(
         '--remote-output-directory',
-        default= None,
+        default= DEFAULTS['remote_output_directory'],
         metavar='remote_output_directory',
         help='Directory where remote outputs are stored.')
     parser.add_argument(
         '--remote-custom-code-directory',
-        default= None,
+        default= DEFAULTS['remote_custom_code_directory'],
         metavar='remote_custom_code_directory',
         help='Directory where remote custom code is stored.')
     parser.add_argument(
         '--remote-log-directory',
-        default= None,
+        default= DEFAULTS['remote_log_directory'],
         metavar='remote_log_directory',
         help='Directory containing execution logs.')
     parser.add_argument(
         '--input-directory',
-        default= "/codebox/test/sample_input_transform/",
+        default= DEFAULTS['input_directory'],
         metavar='input_directory',
         help='Directory where inputs are stored.')
     parser.add_argument(
         '--output-directory',
-        default= "/codebox/test/sample_output_transform/",
+        default= DEFAULTS['output_directory'],
         metavar='output_directory',
         help='Directory where outputs are stored.')
     parser.add_argument(
         '--custom-code-directory',
-        default= "/codebox/sample_code",
+        default= DEFAULTS['custom_code_directory'],
         metavar='custom_code_directory',
         help='Directory containing custom code.')
     parser.add_argument(
         '--log-directory',
-        default= "/codebox/",
+        default= DEFAULTS['log_directory'],
         metavar='log_directory',
         help='Directory containing execution logs.')
     parser.add_argument(
         '--run-mode',
-        default='transform',
+        default=DEFAULTS['run_mode'],
         metavar='run_mode',
         help='Directory where outputs are stored.')
 

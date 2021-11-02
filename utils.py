@@ -88,6 +88,11 @@ def get_codebox_args():
         metavar='log_directory',
         help='Directory containing execution logs.')
     parser.add_argument(
+        '--vault-log-directory',
+        default= DEFAULTS['codebox']['log_directory'],
+        metavar='vault_log_directory',
+        help='Directory containing vault execution logs.')
+    parser.add_argument(
         '--run-mode',
         default=DEFAULTS['codebox']['run_mode'],
         metavar='run_mode',

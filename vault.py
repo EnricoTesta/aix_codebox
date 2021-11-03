@@ -13,7 +13,8 @@ logger = getLogger('vault_logger')
 logger.info("Logging started...")
 
 logger.info("Importing custom module...")
-custom_module = import_module(f"{args_dict['custom_code_directory'].split('/')[-1]}.main") # expect to import process & transform
+custom_module_name = args_dict['custom_code_directory'].split('/')[-1]
+custom_module = import_module(f"{custom_module_name}.main")
 
 try:
     logger.info("Fetching function handler...")

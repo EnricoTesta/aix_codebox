@@ -16,6 +16,7 @@ logger.info("Logging started...")
 identity_check = run('whoami', shell=True, capture_output=True)
 current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
 logger.info(f"Currently user is {current_user}...")
+logger.info(f"Current directory is {os.getcwd()}")
 
 logger.info("Importing custom module...")
 custom_module_name = args_dict['custom_code_directory'].split('/')[-1]

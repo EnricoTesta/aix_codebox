@@ -1,5 +1,6 @@
 from utils import get_vault_args
 from importlib import import_module
+from subprocess import run
 from logging import getLogger, basicConfig, DEBUG
 import os
 
@@ -11,6 +12,9 @@ basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
             level=DEBUG)
 logger = getLogger('vault_logger')
 logger.info("Logging started...")
+
+identity_check = run('whoami', shell=True, capture_output=True)
+logger.info(f"Currently user is {identity_check.stdout.decode('utf-8').replace('\n', '')}...")
 
 logger.info("Importing custom module...")
 custom_module_name = args_dict['custom_code_directory'].split('/')[-1]

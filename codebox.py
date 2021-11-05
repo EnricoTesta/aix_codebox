@@ -46,6 +46,9 @@ logger.info("Run custom code in vault...")
 
 # TODO: remove all internet and network access @ this point. Either spawn process as another user or use iptables on current user.
 vault_process = run(vault_cmd, shell=True, capture_output=True)
+if vault_process.returncode != 0:
+    logger.error(f"Vault process failed. Stderr: {vault_process.stderr}")
+    raise ChildProcessError
 # TODO: restore network access @ this point
 
 # STEP 6 - Export outputs

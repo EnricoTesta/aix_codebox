@@ -27,6 +27,8 @@ try:
     logger.info(f"Executing function {args_dict['run_mode']}")
     fn_callable(input_directory=args_dict['input_directory'], output_directory=args_dict['output_directory'])
 except Exception as e:
-    pass
+    logger.error("Custom callable function error.")
+    logger.error(f"{str(e)}")
+    raise RuntimeError
 
 logger.info("Process Complete.")

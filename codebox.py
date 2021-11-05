@@ -52,13 +52,20 @@ python_cmd = f"python vault.py {input_dir_arg} {output_dir_arg} {custom_code_dir
 vault_cmd = f"sudo -u vault_user {python_cmd}"
 logger.info("Run custom code in vault...")
 
-# TODO: remove all internet and network access @ this point. Either spawn process as another user or use iptables on current user.
+# Remove all internet and network access for vault_user (uid 1500)
+logger.info("Configuring iptables...")
+iptables_cmd = "sudo iptables -A OUTPUT -m owner --uid-owner 1500 -j DROP"
+iptables_process = run(iptables_cmd, shell=True, capture_output=True)
+if iptables_process.returncode != 0:
+    logger.error("Failed to configure iptables.")
+    logger.error(f"{iptables_process.stderr.decode('utf-8')}")
+    raise ChildProcessError
+
 vault_process = run(vault_cmd, shell=True, capture_output=True)
 if vault_process.returncode != 0:
     logger.error("Vault process failed. Stderr: ")
     logger.error(f"{vault_process.stderr.decode('utf-8')}")
     raise ChildProcessError
-# TODO: restore network access @ this point
 
 # STEP 6 - Export outputs
 logger.info("Syncing output directory with remote path...")

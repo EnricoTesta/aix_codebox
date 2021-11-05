@@ -13,6 +13,11 @@ basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
                     level=DEBUG)
 logger = getLogger('codebox_logger')
 logger.info("Logging started...")
+logger.info(f"Current directory is {os.getcwd()}")
+
+identity_check = run('whoami', shell=True, capture_output=True)
+current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
+logger.info(f"Currently user is {current_user}...")
 
 # STEP 1 - Retrieve remote input directory
 logger.info("Syncing input directory...")
@@ -30,10 +35,12 @@ if status.returncode != 0:
 
 
 # STEP 3 - pip install to ensure requirements are fullfilled
+# Using "sudo -H python -m pip" makes packages install globally (i.e. they can be used also by other users)
+# In this case there is redundancy between setup.py and requirements.txt. Moreover, packages are installed also on current user
+# using setup.py which is useless.
 logger.info("Installing custom code...")
-pip_cmd = f"python -m pip install {args_dict['custom_code_directory']}"
+pip_cmd = f"sudo -H python -m pip install -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}; sudo -H python -m pip install {args_dict['custom_code_directory']}"
 pip_process = run(pip_cmd, shell=True, capture_output=True)
-
 
 input_dir_arg = f"--input-directory={args_dict['input_directory']}"
 output_dir_arg = f"--output-directory={args_dict['output_directory']}"
@@ -41,7 +48,8 @@ custom_code_dir_arg = f"--custom-code-directory={args_dict['custom_code_director
 vault_log_dir_arg = f"--log-directory={args_dict['vault_log_directory']}"
 run_mode_arg = f"--run-mode={args_dict['run_mode']}"
 
-vault_cmd = f"python vault.py {input_dir_arg} {output_dir_arg} {custom_code_dir_arg} {vault_log_dir_arg} {run_mode_arg}"
+python_cmd = f"python vault.py {input_dir_arg} {output_dir_arg} {custom_code_dir_arg} {vault_log_dir_arg} {run_mode_arg}"
+vault_cmd = f"sudo -u vault_user {python_cmd}"
 logger.info("Run custom code in vault...")
 
 # TODO: remove all internet and network access @ this point. Either spawn process as another user or use iptables on current user.

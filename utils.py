@@ -68,6 +68,11 @@ def get_codebox_args():
         metavar='remote_log_directory',
         help='Directory containing execution logs.')
     parser.add_argument(
+        '--remote-vault-log-directory',
+        default= DEFAULTS['codebox']['remote_vault_log_directory'],
+        metavar='remote_log_directory',
+        help='Directory containing execution logs.')
+    parser.add_argument(
         '--input-directory',
         default= DEFAULTS['codebox']['input_directory'],
         metavar='input_directory',

@@ -13,9 +13,9 @@ RUN apt-get update && \
     mkdir /root/codebox/logs/vault && \
     sudo useradd -u 1500 -m -d /codebox vault_user && \
     sudo su vault_user && \
-    chmod -R 777 /codebox/custom_code && \
-    chmod -R 664 /codebox/input && \
-    chmod -R 666 /codebox/output && \
+    chmod -R 777 /root/codebox/custom_code && \
+    chmod -R 664 /root/codebox/input && \
+    chmod -R 666 /root/codebox/output && \
     exit
 
 # Install Google Cloud SDK + client libraries

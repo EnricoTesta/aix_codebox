@@ -2,7 +2,9 @@ FROM python:3.9-buster
 WORKDIR /root
 
 # Create directories, vault_user, and set permissions
-RUN mkdir /root/codebox && \
+RUN apt-get update && \
+    apt-get -y install sudo && \
+    mkdir /root/codebox && \
     mkdir /root/codebox/custom_code && \
     mkdir /root/codebox/input && \
     mkdir /root/codebox/output && \

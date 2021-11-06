@@ -1,24 +1,27 @@
 FROM python:3.9-buster
 WORKDIR /root
 
-# Installs google cloud sdk, this is mostly for using gsutil to export model.
-RUN apt-get update -y && \
-    pip install google-cloud-storage==1.42.3 && \
-    wget -nv \
-    https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz && \
-    mkdir /root/tools && \
-    tar xvzf google-cloud-sdk.tar.gz -C /root/tools && \
-    rm google-cloud-sdk.tar.gz && \
-    /root/tools/google-cloud-sdk/install.sh --usage-reporting=false \
-        --path-update=false --bash-completion=false \
-        --disable-installation-options && \
-    rm -rf /root/.config/* && \
-    ln -s /root/.config /config && \
-    # Remove the backup directory that gcloud creates
-    rm -rf /root/tools/google-cloud-sdk/.install/.backup && \
-    echo '[GoogleCompute]\nservice_account = default' > /etc/boto.cfg && \
-    mkdir /root/codebox && \
-    apt-get clean
+# Create directories, vault_user, and set permissions
+RUN mkdir /root/codebox && \
+    mkdir /root/codebox/custom_code && \
+    mkdir /root/codebox/input && \
+    mkdir /root/codebox/output && \
+    mkdir /root/codebox/logs && \
+    mkdir /root/codebox/logs/codebox && \
+    mkdir /root/codebox/logs/vault && \
+    sudo useradd -u 1500 -m -d /codebox vault_user && \
+    sudo su vault_user && \
+    chmod -R 777 /codebox/custom_code && \
+    chmod -R 664 /codebox/input && \
+    chmod -R 666 /codebox/output && \
+    exit
+
+# Install Google Cloud SDK + client libraries
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && \
+    apt-get update -y && \
+    apt-get install google-cloud-sdk -y && \
+    pip install google-cloud-storage==1.42.3
 
 # Path configuration
 ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
@@ -26,6 +29,7 @@ ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
 # Copies necessary code
 COPY utils.py /root/codebox/utils.py
 COPY codebox.py /root/codebox/codebox.py
+COPY codebox.py /root/codebox/vault.py
 
 # Sets up the entry point to invoke the trainer.
 ENTRYPOINT ["python3", "codebox/codebox.py"]

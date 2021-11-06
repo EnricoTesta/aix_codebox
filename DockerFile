@@ -34,4 +34,4 @@ COPY codebox.py /root/codebox/codebox.py
 COPY codebox.py /root/codebox/vault.py
 
 # Sets up the entry point to invoke the trainer.
-ENTRYPOINT ["python3", "codebox/codebox.py"]
+ENTRYPOINT ["python3", "/root/codebox/codebox.py"]

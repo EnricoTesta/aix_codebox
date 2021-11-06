@@ -25,6 +25,7 @@ status = sync_directory(source_directory=args_dict['remote_input_directory'], de
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 # STEP 2 - Retrieve custom code
@@ -33,6 +34,7 @@ status = sync_directory(source_directory=args_dict['remote_custom_code_directory
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 
@@ -47,6 +49,7 @@ if pip_process.returncode != 0:
     logger.error("Vault process failed. Stderr: ")
     logger.error(f"{pip_process.stderr.decode('utf-8')}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 input_dir_arg = f"--input-directory={args_dict['input_directory']}"
@@ -68,6 +71,7 @@ if iptables_process.returncode != 0:
     logger.error("Failed to configure iptables.")
     logger.error(f"{iptables_process.stderr.decode('utf-8')}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 vault_process = run(vault_cmd, shell=True, capture_output=True)
@@ -75,6 +79,7 @@ if vault_process.returncode != 0:
     logger.error("Vault process failed. Stderr: ")
     logger.error(f"{vault_process.stderr.decode('utf-8')}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 # STEP 6 - Export outputs
@@ -83,6 +88,7 @@ status = sync_directory(source_directory=args_dict['output_directory'], destinat
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 logger.info("Syncing log directory with remote path...")

@@ -3,9 +3,19 @@ from subprocess import run, CalledProcessError
 from yaml import safe_load
 import os
 
-
-with open(os.path.join(os.path.dirname(__file__), 'defaults.yaml'), 'r') as f:
-    DEFAULTS = safe_load(f)
+try:
+    with open(os.path.join(os.path.dirname(__file__), 'defaults.yaml'), 'r') as f:
+        DEFAULTS = safe_load(f)
+except FileNotFoundError:
+    DEFAULTS = {'vault': {'input_directory': None, 'output_directory': None,
+                          'custom_code_directory': None, 'log_directory': None,
+                          'run_mode': None},
+                'codebox': {'remote_input_directory': None, 'remote_output_directory': None,
+                            'remote_custom_code_directory': None, 'remote_log_directory': None,
+                            'remote_vault_log_directory': None, 'vault_log_directory': None,
+                            'input_directory': None, 'output_directory': None,
+                            'custom_code_directory': None, 'log_directory': None,
+                            'run_mode': None}}
 
 def get_vault_args():
     """Argument parser.

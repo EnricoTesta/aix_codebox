@@ -30,7 +30,7 @@ if status.returncode != 0:
 
 # STEP 2 - Retrieve custom code
 logger.info("Syncing custom code directory...")
-status = sync_directory(source_directory=args_dict['remote_custom_code_directory'], destination_directory=args_dict['custom_code_directory'])
+status = sync_directory(source_directory=args_dict['remote_custom_code_directory'], destination_directory=args_dict['custom_code_directory'], recursive=True)
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
@@ -46,7 +46,7 @@ logger.info("Installing custom code...")
 pip_cmd = f"sudo -H python -m pip install -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}; sudo -H python -m pip install {args_dict['custom_code_directory']}"
 pip_process = run(pip_cmd, shell=True, capture_output=True)
 if pip_process.returncode != 0:
-    logger.error("Vault process failed. Stderr: ")
+    logger.error("Pip process failed. Stderr: ")
     logger.error(f"{pip_process.stderr.decode('utf-8')}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
     sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])

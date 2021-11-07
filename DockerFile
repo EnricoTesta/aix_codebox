@@ -1,10 +1,15 @@
 FROM python:3.9-buster
 WORKDIR /root
 
+# nft list ruleset
+# nft add table ip filter # create table
+# nft add chain ip filter INPUT { type filter hook input priority 0 \; } # create chain
+# RUN sudo apt-get -y install iptables && \
+#    apt-get -y install nftables=0.8.2
+
 # Create directories, vault_user, and set permissions
 RUN apt-get update && \
     apt-get -y install sudo && \
-    sudo apt-get -y install iptables && \
     mkdir /root/codebox && \
     mkdir /root/codebox/custom_code && \
     mkdir /root/codebox/input && \

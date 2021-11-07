@@ -116,9 +116,12 @@ def get_codebox_args():
     return vars(parser.parse_args())
 
 
-def sync_directory(source_directory=None, destination_directory=None, environment='GCP'):
+def sync_directory(source_directory=None, destination_directory=None, recursive=False, environment='GCP'):
     if environment == 'GCP':
-        get_input_dir_cmd = f"gsutil -m rsync {source_directory} {destination_directory}"
+        if recursive:
+            get_input_dir_cmd = f"gsutil -m rsync -r {source_directory} {destination_directory}"
+        else:
+            get_input_dir_cmd = f"gsutil -m rsync {source_directory} {destination_directory}"
         try:
             status = run(get_input_dir_cmd, shell=True, capture_output=True, check=True)
         except CalledProcessError as e:

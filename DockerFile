@@ -4,7 +4,7 @@ WORKDIR /root
 # Create directories, vault_user, and set permissions
 RUN apt-get update && \
     apt-get -y install sudo && \
-    apt-get install iptables && \
+    sudo apt-get install iptables && \
     mkdir /root/codebox && \
     mkdir /root/codebox/custom_code && \
     mkdir /root/codebox/input && \

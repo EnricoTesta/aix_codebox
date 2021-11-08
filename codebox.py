@@ -60,6 +60,8 @@ run_mode_arg = f"--run-mode={args_dict['run_mode']}"
 
 python_cmd = f"python vault.py {input_dir_arg} {output_dir_arg} {custom_code_dir_arg} {vault_log_dir_arg} {run_mode_arg}"
 # using unshare runs program with namespaces unshared from the parent. In this case, the network namespace
+test = run("sudo cat /proc/sys/kernel/unprivileged_userns_clone", shell=True, capture_output=True)
+logger.info(f"stdout {test.stdout.decode('utf-8')}. stderr {test.stderr.decode('utf-8')}")
 vault_cmd = f"sudo unshare -n sudo -u vault_user {python_cmd}"
 logger.info("Run custom code in vault...")
 

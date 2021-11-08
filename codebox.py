@@ -59,26 +59,27 @@ vault_log_dir_arg = f"--log-directory={args_dict['vault_log_directory']}"
 run_mode_arg = f"--run-mode={args_dict['run_mode']}"
 
 python_cmd = f"python vault.py {input_dir_arg} {output_dir_arg} {custom_code_dir_arg} {vault_log_dir_arg} {run_mode_arg}"
-# using unshare runs program with namespaces unshared from the parent. In this case, the network namespace
-test = run("sudo cat /proc/sys/kernel/unprivileged_userns_clone", shell=True, capture_output=True)
-logger.info(f"stdout {test.stdout.decode('utf-8')}. stderr {test.stderr.decode('utf-8')}")
-vault_cmd = f"sudo unshare -n sudo -u vault_user {python_cmd}"
+# using unshare runs program with namespaces unshared from the parent.
+# In this case, the network namespace.
+# Could not use 'sudo unshare -n sudo -u vault_user {python_cmd}' because it runs locally but not on container.
+# This is probably due to missing libraries in container's base image.
+# Using nftables (new version of iptables) to block traffic.
+vault_cmd = f"sudo -u vault_user {python_cmd}"
 logger.info("Run custom code in vault...")
 
 # Remove all internet and network access for vault_user (uid 1500)
 # Cannot disable gsutil for specific user is not possible
-# logger.info("Configuring iptables...")
+logger.info("Configuring nftables...")
 # iptables rule: -A OUTPUT -m owner --uid-owner 1500 -j DROP
 # nftables equivalent: nft add rule ip filter OUTPUT skuid 1500 counter drop
-# iptables_cmd = "sudo iptables -A OUTPUT -m owner --uid-owner 1500 -j DROP"
-# iptables_cmd = "sudo nft add rule ip filter OUTPUT skuid 1500 counter drop"
-# iptables_process = run(iptables_cmd, shell=True, capture_output=True)
-# if iptables_process.returncode != 0:
-#     logger.error("Failed to configure iptables.")
-#     logger.error(f"{iptables_process.stderr.decode('utf-8')}")
-#     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-#     sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
-#     raise ChildProcessError
+nftables_cmd = "sudo nft add rule inet filter output skuid 1500 counter drop"
+nftables_process = run(nftables_cmd, shell=True, capture_output=True)
+if nftables_process.returncode != 0:
+     logger.error("Failed to configure iptables.")
+     logger.error(f"{nftables_process.stderr.decode('utf-8')}")
+     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+     sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
+     raise ChildProcessError
 
 vault_process = run(vault_cmd, shell=True, capture_output=True)
 if vault_process.returncode != 0:

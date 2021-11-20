@@ -99,6 +99,11 @@ def get_codebox_args():
         metavar='output_directory',
         help='Directory where outputs are stored.')
     parser.add_argument(
+        '--repo-directory',
+        default= DEFAULTS['codebox']['repo_directory'],
+        metavar='repo_directory',
+        help='Repo directory.')
+    parser.add_argument(
         '--custom-code-directory',
         default= DEFAULTS['codebox']['custom_code_directory'],
         metavar='custom_code_directory',

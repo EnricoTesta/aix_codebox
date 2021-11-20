@@ -69,6 +69,11 @@ def get_codebox_args():
         metavar='remote_output_directory',
         help='Directory where remote outputs are stored.')
     parser.add_argument(
+        '--remote-repo-directory',
+        default= DEFAULTS['codebox']['remote_repo_directory'],
+        metavar='remote_repo_directory',
+        help='Directory where remote custom code is stored.')
+    parser.add_argument(
         '--remote-custom-code-directory',
         default= DEFAULTS['codebox']['remote_custom_code_directory'],
         metavar='remote_custom_code_directory',

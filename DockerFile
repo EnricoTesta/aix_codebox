@@ -1,27 +1,6 @@
-FROM python:3.9-buster
+FROM python:3.7-buster
 WORKDIR /root
 
-# Create directories, vault_user, and set permissions
-RUN apt-get update && \
-    apt-get -y install sudo && \
-    sudo apt-get -y install nftables && \
-    #/sbin/init && \
-    #sudo systemctl --now enable nftables && \
-    #sudo nft add table inet filter && \
-    #sudo nft add chain inet filter output { type filter hook input priority 0 \; } && \
-    mkdir /root/codebox && \
-    mkdir /root/codebox/custom_code && \
-    mkdir /root/codebox/input && \
-    mkdir /root/codebox/output && \
-    mkdir /root/codebox/logs && \
-    mkdir /root/codebox/logs/codebox && \
-    mkdir /root/codebox/logs/vault && \
-    sudo useradd -u 1500 -m -d /codebox vault_user && \
-    sudo su vault_user && \
-    chmod -R 777 /root/codebox/custom_code && \
-    chmod -R 664 /root/codebox/input && \
-    chmod -R 666 /root/codebox/output && \
-    exit
 
 # Install Google Cloud SDK + client libraries
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
@@ -37,7 +16,6 @@ ENV PATH $PATH:/root/tools/google-cloud-sdk/bin
 # Copies necessary code
 COPY utils.py /root/codebox/utils.py
 COPY codebox.py /root/codebox/codebox.py
-COPY codebox.py /root/codebox/vault.py
 
 # Sets up the entry point to invoke the trainer.
 ENTRYPOINT ["python3", "/root/codebox/codebox.py"]

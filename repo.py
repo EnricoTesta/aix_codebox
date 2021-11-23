@@ -46,9 +46,14 @@ if missing_packages:
         with open(filename, 'w') as f:
             for package in missing_packages:
                 f.write(package)
-
-        pip_cmd = f"python -m pip download --destination-directory {missing_packages_dir} -r {filename}"
-        run(pip_cmd, shell=True, capture_output=True)
+        # TODO: pip does not seem to find all versions (for example scikit-learn 1.0.0)
+        # pip does not find a version if it's not compatible with the python version you are currently using
+        # Moreover, pip will download the appropriate wheel for the python version and platform you are running on.
+        # To install pip in a specific python environment:
+        # 1. curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        # 2. python3.7 get-pip.py
+        pip_cmd = f"python3.7 -m pip download --only-binary :all: --no-cache-dir --destination-directory {missing_packages_dir} -r {filename}"
+        run(pip_cmd, shell=True)
 
         # Store packages in remote repo
         os.remove(filename)

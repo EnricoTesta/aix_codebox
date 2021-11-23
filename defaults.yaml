@@ -8,7 +8,7 @@ codebox:
   input_directory: '/codebox/test/sample_input_process'
   output_directory: '/codebox/test/sample_output_process'
   custom_code_directory: '/codebox/sample_code'
-  repo_directory: '/codebox/repo'
+  repo_directory: '/codebox/test/repo'
   log_directory: '/codebox/test/logs/'
   vault_log_directory: '/codebox/test/vault/'
   run_mode: 'process'

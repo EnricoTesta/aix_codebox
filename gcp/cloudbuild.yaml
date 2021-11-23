@@ -1,9 +1,9 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  # args: [ 'build', '-t', 'europe-west4-docker.pkg.dev/$PROJECT_ID/codebox/codebox:codebox', '-f', './DockerFile', '.' ]
-  args: [ 'build', '-t', '${_GCR_URL}/$PROJECT_ID/codebox:codebox', '-f', './DockerFile', '.' ]
+  args: [ 'build', '-t', 'europe-west4-docker.pkg.dev/$PROJECT_ID/codebox/codebox:codebox', '-f', './DockerFile', '.' ]
+  # args: [ 'build', '-t', '${_GCR_URL}/$PROJECT_ID/codebox:codebox', '-f', './DockerFile', '.' ]
   timeout: 600s
 images:
-  # - 'europe-west4-docker.pkg.dev/$PROJECT_ID/codebox/codebox:codebox'
-  - '${_GCR_URL}/$PROJECT_ID/codebox:codebox'
+  - 'europe-west4-docker.pkg.dev/$PROJECT_ID/codebox/codebox:codebox'
+  # - '${_GCR_URL}/$PROJECT_ID/codebox:codebox'
 timeout: 600s

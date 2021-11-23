@@ -13,7 +13,7 @@ except FileNotFoundError:
                           'run_mode': None},
                 'codebox': {'remote_input_directory': None, 'remote_output_directory': None,
                             'remote_custom_code_directory': None, 'remote_log_directory': None,
-                            'remote_vault_log_directory': None, 'vault_log_directory': None,
+                            'remote_repo_directory': None, 'remote_vault_log_directory': None, 'vault_log_directory': None,
                             'input_directory': None, 'output_directory': None,
                             'custom_code_directory': None, 'log_directory': None,
                             'run_mode': None}}

@@ -8,6 +8,8 @@ from logging import getLogger, basicConfig, DEBUG
 
 config_file_uri = get_codebox_args()['config_file_uri']
 status = sync_directory(source_directory=config_file_uri, destination_directory=os.getcwd())
+if status.returncode != 0:
+    raise ChildProcessError(f"Return code {status.returncode}. Stderr: {status.stderr}")
 with open(os.path.join(os.getcwd(), config_file_uri.split("/")[-1]), 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)

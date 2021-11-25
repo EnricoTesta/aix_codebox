@@ -15,6 +15,10 @@ with open(local_config_file_uri, 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
 
+for key, item in args_dict.items():
+    if key.endswith('directory') and not key.startswith('remote'):
+        os.mkdir(item)
+
 basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
                     filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',

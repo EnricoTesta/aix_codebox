@@ -2,10 +2,13 @@ import os
 from importlib import import_module
 from utils import get_codebox_args, sync_directory
 from subprocess import run
+from yaml import safe_load
 from logging import getLogger, basicConfig, DEBUG
 
 
-args_dict = get_codebox_args()
+config_file_uri = get_codebox_args()['config_file_uri']
+with open(config_file_uri, 'r') as f:
+    args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
 
 basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),

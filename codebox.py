@@ -1,16 +1,17 @@
 import os
 from importlib import import_module
-from utils import get_codebox_args, sync_directory
+from utils import get_codebox_args, sync_directory, copy_file
 from subprocess import run
 from yaml import safe_load
 from logging import getLogger, basicConfig, DEBUG
 
 
 config_file_uri = get_codebox_args()['config_file_uri']
-status = sync_directory(source_directory=config_file_uri, destination_directory=os.getcwd())
+local_config_file_uri = os.path.join(os.getcwd(), config_file_uri.split("/")[-1])
+status = copy_file(source_file=config_file_uri, destination_file=local_config_file_uri)
 if status.returncode != 0:
     raise ChildProcessError(f"Return code {status.returncode}. Stderr: {status.stderr}")
-with open(os.path.join(os.getcwd(), config_file_uri.split("/")[-1]), 'r') as f:
+with open(local_config_file_uri, 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
 

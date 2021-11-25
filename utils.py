@@ -1,56 +1,8 @@
 from argparse import ArgumentParser
 from subprocess import run, CalledProcessError
-from yaml import safe_load
 from tempfile import TemporaryDirectory
 import os
 
-try:
-    with open(os.path.join(os.path.dirname(__file__), 'defaults.yaml'), 'r') as f:
-        DEFAULTS = safe_load(f)
-except FileNotFoundError:
-    DEFAULTS = {'vault': {'input_directory': None, 'output_directory': None,
-                          'custom_code_directory': None, 'log_directory': None,
-                          'run_mode': None},
-                'codebox': {'remote_input_directory': None, 'remote_output_directory': None,
-                            'remote_custom_code_directory': None, 'remote_log_directory': None,
-                            'remote_repo_directory': None, 'remote_vault_log_directory': None, 'vault_log_directory': None,
-                            'input_directory': None, 'output_directory': None, 'repo_directory': None,
-                            'custom_code_directory': None, 'log_directory': None,
-                            'run_mode': None}}
-
-def get_vault_args():
-    """Argument parser.
-    Returns:
-      Dictionary of arguments.
-    """
-    parser = ArgumentParser()
-    parser.add_argument(
-        '--input-directory',
-        default= DEFAULTS['vault']['input_directory'],
-        metavar='input_directory',
-        help='Directory where inputs are stored.')
-    parser.add_argument(
-        '--output-directory',
-        default= DEFAULTS['vault']['output_directory'],
-        metavar='output_directory',
-        help='Directory where outputs are stored.')
-    parser.add_argument(
-        '--custom-code-directory',
-        default= DEFAULTS['vault']['custom_code_directory'],
-        metavar='custom_code_directory',
-        help='Directory containing custom code.')
-    parser.add_argument(
-        '--log-directory',
-        default= DEFAULTS['vault']['log_directory'],
-        metavar='log_directory',
-        help='Directory containing logs.')
-    parser.add_argument(
-        '--run-mode',
-        default=DEFAULTS['vault']['run_mode'],
-        metavar='run_mode',
-        help='Directory where outputs are stored.')
-
-    return vars(parser.parse_args())
 
 def get_codebox_args():
     """Argument parser.
@@ -59,70 +11,10 @@ def get_codebox_args():
     """
     parser = ArgumentParser()
     parser.add_argument(
-        '--remote-input-directory',
-        default= DEFAULTS['codebox']['remote_input_directory'],
-        metavar='remote_input_directory',
-        help='Directory where remote inputs are stored.')
-    parser.add_argument(
-        '--remote-output-directory',
-        default= DEFAULTS['codebox']['remote_output_directory'],
-        metavar='remote_output_directory',
-        help='Directory where remote outputs are stored.')
-    parser.add_argument(
-        '--remote-repo-directory',
-        default= DEFAULTS['codebox']['remote_repo_directory'],
-        metavar='remote_repo_directory',
-        help='Directory where remote custom code is stored.')
-    parser.add_argument(
-        '--remote-custom-code-directory',
-        default= DEFAULTS['codebox']['remote_custom_code_directory'],
-        metavar='remote_custom_code_directory',
-        help='Directory where remote custom code is stored.')
-    parser.add_argument(
-        '--remote-log-directory',
-        default= DEFAULTS['codebox']['remote_log_directory'],
-        metavar='remote_log_directory',
-        help='Directory containing execution logs.')
-    parser.add_argument(
-        '--remote-vault-log-directory',
-        default= DEFAULTS['codebox']['remote_vault_log_directory'],
-        metavar='remote_log_directory',
-        help='Directory containing execution logs.')
-    parser.add_argument(
-        '--input-directory',
-        default= DEFAULTS['codebox']['input_directory'],
-        metavar='input_directory',
-        help='Directory where inputs are stored.')
-    parser.add_argument(
-        '--output-directory',
-        default= DEFAULTS['codebox']['output_directory'],
-        metavar='output_directory',
-        help='Directory where outputs are stored.')
-    parser.add_argument(
-        '--repo-directory',
-        default= DEFAULTS['codebox']['repo_directory'],
-        metavar='repo_directory',
-        help='Repo directory.')
-    parser.add_argument(
-        '--custom-code-directory',
-        default= DEFAULTS['codebox']['custom_code_directory'],
-        metavar='custom_code_directory',
-        help='Directory containing custom code.')
-    parser.add_argument(
-        '--log-directory',
-        default= DEFAULTS['codebox']['log_directory'],
-        metavar='log_directory',
-        help='Directory containing execution logs.')
-    parser.add_argument(
-        '--vault-log-directory',
-        default= DEFAULTS['codebox']['vault_log_directory'],
-        metavar='vault_log_directory',
-        help='Directory containing vault execution logs.')
-    parser.add_argument(
-        '--run-mode',
-        default=DEFAULTS['codebox']['run_mode'],
-        metavar='run_mode',
-        help='Directory where outputs are stored.')
+        '--config-file-uri',
+        default= './config.yaml',
+        metavar='config_file_uri',
+        help='Absolute path to configuration file.')
 
     return vars(parser.parse_args())
 

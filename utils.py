@@ -68,3 +68,15 @@ def sync_directory(source_directory=None, destination_directory=None, recursive=
     else:
         raise NotImplementedError
     return status
+
+
+def copy_file(source_file=None, destination_file=None, environment='GCP'):
+    if environment == 'GCP':
+        get_file_cmd = f"gsutil cp {source_file} {destination_file}"
+        try:
+            status = run(get_file_cmd, shell=True, capture_output=True, check=True)
+        except CalledProcessError as e:
+            return e
+    else:
+        raise NotImplementedError
+    return status

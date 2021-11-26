@@ -33,7 +33,6 @@ status = sync_directory(source_directory=args_dict['remote_input_directory'], de
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 # STEP 2 - Retrieve custom code
@@ -42,7 +41,6 @@ status = sync_directory(source_directory=args_dict['remote_custom_code_directory
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 
@@ -51,7 +49,6 @@ status = sync_directory(source_directory=args_dict['remote_repo_directory'], des
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 # STEP 3 - pip install to ensure requirements are fullfilled
@@ -65,7 +62,6 @@ if pip_process.returncode != 0:
     logger.error("Pip process failed. Stderr: ")
     logger.error(f"{pip_process.stderr.decode('utf-8')}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 logger.info("Importing custom module...")
@@ -93,7 +89,6 @@ status = sync_directory(source_directory=args_dict['output_directory'], destinat
 if status.returncode != 0:
     logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
     sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    sync_directory(source_directory=args_dict['vault_log_directory'], destination_directory=args_dict['remote_vault_log_directory'])
     raise ChildProcessError
 
 logger.info("Syncing log directory with remote path...")

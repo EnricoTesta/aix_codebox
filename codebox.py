@@ -1,6 +1,7 @@
 import os
+import sys
 from importlib import import_module
-from utils import get_codebox_args, sync_directory, copy_file
+from utils import get_codebox_args, get_custom_module_name, sync_directory, copy_file
 from subprocess import run
 from yaml import safe_load
 from logging import getLogger, basicConfig, DEBUG
@@ -56,7 +57,9 @@ if status.returncode != 0:
 # In this case there is redundancy between setup.py and requirements.txt. Moreover, packages are installed also on current user
 # using setup.py which is useless.
 logger.info("Installing custom code...")
-pip_cmd = f"sudo -H python -m pip install --no-index --find-links={args_dict['repo_directory']} -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}; sudo -H python -m pip install {args_dict['custom_code_directory']}"
+custom_module_name, custom_module_abs_path = get_custom_module_name(args_dict['custom_code_directory'])
+# pip_cmd = f"sudo -H python -m pip install --no-index --find-links={args_dict['repo_directory']} -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}; sudo -H python -m pip install {args_dict['custom_code_directory']}"
+pip_cmd = f"sudo -H python -m pip install --no-index --find-links={args_dict['repo_directory']} -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}"
 pip_process = run(pip_cmd, shell=True, capture_output=True)
 if pip_process.returncode != 0:
     logger.error("Pip process failed. Stderr: ")
@@ -65,8 +68,8 @@ if pip_process.returncode != 0:
     raise ChildProcessError
 
 logger.info("Importing custom module...")
-custom_module_name = args_dict['custom_code_directory'].split('/')[-1]
-custom_module = import_module(f"{custom_module_name}.{custom_module_name}.main")
+sys.path.append(os.path.join(args_dict['custom_code_directory'], custom_module_name))
+custom_module = import_module("main", package=custom_module_name)
 
 try:
     logger.info("Fetching function handler...")

@@ -55,6 +55,15 @@ def get_missing_packages(required_packages=None, available_packages=None):
             missing_packages.append(req)
     return missing_packages
 
+def get_custom_module_name(code_directory=None):
+    dirs = []
+    for dir in os.listdir(code_directory):
+        if os.path.isdir(os.path.join(code_directory, dir)):
+            dirs.append(os.path.join(code_directory, dir))
+    if len(dirs) > 1 or len(dirs) == 0:
+        raise ValueError(f"Should find a single directory in path. Found {len(dirs)}")
+    return dirs[0].split("/")[-1], dirs[0]
+
 def sync_directory(source_directory=None, destination_directory=None, recursive=False, environment='GCP'):
     if environment == 'GCP':
         if recursive:

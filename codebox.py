@@ -7,7 +7,7 @@ from yaml import safe_load
 from logging import getLogger, basicConfig, DEBUG
 
 
-config_file_uri = get_codebox_args()['config_file_uri']
+config_file_uri = get_codebox_args()['config-file-uri']
 local_config_file_uri = os.path.join(os.getcwd(), config_file_uri.split("/")[-1])
 status = copy_file(source_file=config_file_uri, destination_file=local_config_file_uri)
 if status.returncode != 0:

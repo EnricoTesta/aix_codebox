@@ -13,7 +13,6 @@ def get_codebox_args():
     parser.add_argument(
         'config-file-uri',
         default= './config.yaml',
-        metavar='config_file_uri',
         help='Absolute path to configuration file.')
 
     return vars(parser.parse_args())

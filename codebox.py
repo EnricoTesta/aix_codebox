@@ -29,12 +29,13 @@ current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
 logger.info(f"Currently user is {current_user}...")
 
 # STEP 1 - Retrieve remote input directory
-logger.info("Syncing input directory...")
-status = sync_directory(source_directory=args_dict['remote_input_directory'], destination_directory=args_dict['input_directory'])
-if status.returncode != 0:
-    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
-    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    raise ChildProcessError
+#logger.info("Syncing input directory...")
+#mount_cmd = f"sudo mount -o discard,defaults /dev/sdb {args_dict['input_directory']}"
+#status = run(mount_cmd, shell=True)
+#if status.returncode != 0:
+#    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
+#    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
+#    raise ChildProcessError
 
 # STEP 2 - Retrieve custom code
 logger.info("Syncing custom code directory...")

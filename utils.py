@@ -70,7 +70,7 @@ def sync_directory(source_directory=None, destination_directory=None, recursive=
         else:
             get_input_dir_cmd = f"gsutil -m rsync {source_directory} {destination_directory}"
         try:
-            status = run(get_input_dir_cmd, shell=True, capture_output=True, check=True)
+            status = run(get_input_dir_cmd, shell=True, capture_output=False, check=True)
         except CalledProcessError as e:
             return e
     else:

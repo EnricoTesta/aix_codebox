@@ -1,4 +1,4 @@
 steps:
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
   args: ['gsutil', '-m', 'rsync', '-r', '.', 'gs://mockcustomer-data-bucket/codebox']
 timeout: 600s

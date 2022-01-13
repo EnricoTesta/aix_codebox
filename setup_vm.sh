@@ -1,5 +1,6 @@
+#!/bin/bash
+
 # Google SDK installed by default on GCP VMs. Choose ubuntu 18.04 LTS as base image.
-sudo su
 # Make directories
 mkdir /root/codebox
 mkdir /root/input

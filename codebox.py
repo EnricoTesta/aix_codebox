@@ -1,7 +1,7 @@
 import os
 import sys
 from importlib import import_module
-from utils import get_codebox_args, get_custom_module_name, sync_directory, copy_file
+from utils import get_codebox_args, get_custom_module_name
 from subprocess import run
 from yaml import safe_load
 from logging import getLogger, basicConfig, DEBUG
@@ -9,9 +9,6 @@ from logging import getLogger, basicConfig, DEBUG
 
 config_file_uri = get_codebox_args()['config-file-uri']
 local_config_file_uri = os.path.join(os.getcwd(), config_file_uri.split("/")[-1])
-status = copy_file(source_file=config_file_uri, destination_file=local_config_file_uri)
-if status.returncode != 0:
-    raise ChildProcessError(f"Return code {status.returncode}. Stderr: {status.stderr}")
 with open(local_config_file_uri, 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
@@ -28,31 +25,6 @@ identity_check = run('whoami', shell=True, capture_output=True)
 current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
 logger.info(f"Currently user is {current_user}...")
 
-# STEP 1 - Retrieve remote input directory
-#logger.info("Syncing input directory...")
-#mount_cmd = f"sudo mount -o discard,defaults /dev/sdb {args_dict['input_directory']}"
-#status = run(mount_cmd, shell=True)
-#if status.returncode != 0:
-#    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
-#    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-#    raise ChildProcessError
-
-# STEP 2 - Retrieve custom code
-logger.info("Syncing custom code directory...")
-status = sync_directory(source_directory=args_dict['remote_custom_code_directory'], destination_directory=args_dict['custom_code_directory'], recursive=True)
-if status.returncode != 0:
-    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
-    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    raise ChildProcessError
-
-
-logger.info("Syncing package repo...")
-status = sync_directory(source_directory=args_dict['remote_repo_directory'], destination_directory=args_dict['repo_directory'])
-if status.returncode != 0:
-    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
-    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    raise ChildProcessError
-
 # STEP 3 - pip install to ensure requirements are fullfilled
 # Using "sudo -H python -m pip" makes packages install globally (i.e. they can be used also by other users)
 # In this case there is redundancy between setup.py and requirements.txt. Moreover, packages are installed also on current user
@@ -65,7 +37,6 @@ pip_process = run(pip_cmd, shell=True, capture_output=True)
 if pip_process.returncode != 0:
     logger.error("Pip process failed. Stderr: ")
     logger.error(f"{pip_process.stderr.decode('utf-8')}")
-    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
     raise ChildProcessError
 
 logger.info("Importing custom module...")
@@ -86,17 +57,3 @@ except Exception as e:
     logger.error("Custom callable function error.")
     logger.error(f"{str(e)}")
     raise RuntimeError
-
-# STEP 6 - Export outputs
-logger.info("Syncing output directory with remote path...")
-status = sync_directory(source_directory=args_dict['output_directory'], destination_directory=args_dict['remote_output_directory'])
-if status.returncode != 0:
-    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
-    sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-    raise ChildProcessError
-
-logger.info("Syncing log directory with remote path...")
-status = sync_directory(source_directory=args_dict['log_directory'], destination_directory=args_dict['remote_log_directory'])
-if status.returncode != 0:
-    logger.error(f"Return code {status.returncode}. Stderr: {status.stderr}")
-    raise ChildProcessError

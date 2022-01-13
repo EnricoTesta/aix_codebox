@@ -1,7 +1,7 @@
 steps:
 - name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
   args: ['gsutil', '-m', 'rsync', '-r', '.', 'gs://mockcustomer-data-bucket/codebox']
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
+- name: 'gcr.io/cloud-builders/gcloud'
   args: ['gcloud', 'compute instances create', 'builder-codebox-vm',
           '--project=newco-data-mockcustomer', '--zone=europe-west4-a',
           '--machine-type=e2-micro',

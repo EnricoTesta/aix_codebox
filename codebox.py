@@ -8,8 +8,7 @@ from logging import getLogger, basicConfig, DEBUG
 
 
 config_file_uri = get_codebox_args()['config-file-uri']
-local_config_file_uri = os.path.join(os.getcwd(), config_file_uri.split("/")[-1])
-with open(local_config_file_uri, 'r') as f:
+with open(config_file_uri, 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
 

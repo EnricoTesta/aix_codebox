@@ -1,22 +1,4 @@
 steps:
 - name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
   args: ['gsutil', '-m', 'rsync', '-r', '.', 'gs://mockcustomer-data-bucket/codebox']
-- name: 'gcr.io/cloud-builders/gcloud'
-  args: ['gcloud compute instances create', 'builder-codebox-vm',
-          '--project=newco-data-mockcustomer', '--zone=europe-west4-a',
-          '--machine-type=e2-micro',
-          '--create-disk=auto-delete=yes,boot=yes,device-name=builder-codebox-vm,image=projects/ubuntu-os-cloud/global/images/ubuntu-1804-bionic-v20220111,mode=rw,size=10,type=projects/newco-data-mockcustomer/zones/europe-west1-a/diskTypes/pd-balanced'
-          ]
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ["gcloud compute ssh builder-codebox-vm --command='sudo gsutil -m rsync -r gs://mockcustomer-data-bucket/codebox /root/codebox/'"]
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ["gcloud compute ssh builder-codebox-vm --command='sudo /bin/bash /root/codebox/setup_vm.sh'"]
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ["gcloud compute instances stop builder-codebox-vm --zone=europe-west4-a"]
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ["gcloud compute images delete codebox-boot-image"]
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ["gcloud compute images create codebox-boot-image --source-disk=builder-codebox-vm --source-disk-zone=europe-west4-a --storage-location=eu"]
-- name: 'eu.gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args: ["gcloud compute instances delete builder-codebox-vm"]
 timeout: 600s

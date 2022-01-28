@@ -7,7 +7,7 @@ from yaml import safe_load
 from logging import getLogger, basicConfig, DEBUG
 
 
-config_file_uri = get_codebox_args()['config-file-uri']
+config_file_uri = get_codebox_args()['config_file_uri']
 with open(config_file_uri, 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
@@ -28,7 +28,7 @@ mount_repo_status = run('sudo mount -o discard,defaults /dev/sdc /root/repo', sh
 mount_output_status = run('sudo mount -o discard,defaults /dev/sdd /root/output', shell=True, capture_output=True)
 if mount_input_status.returncode != 0 or mount_repo_status.returncode != 0 or mount_output_status.returncode != 0:
     logger.error("Failed mounting disks...")
-    raise ChildProcessError
+    run('shutdown now', shell=True)
 
 identity_check = run('whoami', shell=True, capture_output=True)
 current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
@@ -46,7 +46,7 @@ pip_process = run(pip_cmd, shell=True, capture_output=True)
 if pip_process.returncode != 0:
     logger.error("Pip process failed. Stderr: ")
     logger.error(f"{pip_process.stderr.decode('utf-8')}")
-    raise ChildProcessError
+    run('shutdown now', shell=True)
 
 logger.info("Importing custom module...")
 sys.path.append(os.path.join(args_dict['custom_code_directory'], custom_module_name))
@@ -57,7 +57,7 @@ try:
     fn_callable = getattr(custom_module, args_dict['run_mode'])
 except AttributeError:
     logger.error(f"Function {args_dict['run_mode']} undefined in custom module.")
-    raise AttributeError(f"Function {args_dict['run_mode']} undefined in custom module.")
+    run('shutdown now', shell=True)
 
 try:
     logger.info(f"Executing function {args_dict['run_mode']}...")
@@ -65,4 +65,6 @@ try:
 except Exception as e:
     logger.error("Custom callable function error.")
     logger.error(f"{str(e)}")
-    raise RuntimeError
+    run('shutdown now', shell=True)
+
+run('shutdown now', shell=True)

@@ -2,12 +2,9 @@
 
 # Google SDK installed by default on GCP VMs. Choose ubuntu 18.04 LTS as base image.
 # Make directories
-mkdir /root/codebox
-mkdir /root/input
-mkdir /root/output
-mkdir /root/custom_code
-mkdir /root/repo
-mkdir /root/logs
+mkdir /codebox
+mkdir /input
+mkdir /output
 
 # Install Python 3.7 (includes PyYAML 3.12)
 apt-get update -y
@@ -21,4 +18,4 @@ update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.7 1
 
 
 # Get codebox
-gsutil -m rsync -r gs://mockcustomer-data-bucket/codebox /root/codebox
+gsutil -m rsync -r gs://mockcustomer-data-bucket/codebox /codebox

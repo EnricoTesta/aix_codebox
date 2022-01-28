@@ -20,15 +20,6 @@ logger = getLogger('codebox_logger')
 logger.info("Logging started...")
 logger.info(f"Current directory is {os.getcwd()}")
 
-logger.info("Mount external disks...")
-# Beware of the order in which you attach disks. It should be the same order in which they appear here. Should find a
-# way to overwrite names such as sdb and sdc.
-mount_output_status = run('sudo mount -o discard,defaults /dev/sdb /root/output', shell=True, capture_output=True)
-mount_input_status = run('sudo mount -o discard,defaults /dev/sdc /root/input', shell=True, capture_output=True)
-if mount_input_status.returncode != 0 or mount_output_status.returncode != 0:
-    logger.error("Failed mounting disks...")
-    run('shutdown now', shell=True)
-
 identity_check = run('whoami', shell=True, capture_output=True)
 current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
 logger.info(f"Currently user is {current_user}...")

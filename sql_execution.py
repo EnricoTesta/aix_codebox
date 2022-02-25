@@ -40,7 +40,7 @@ job_list = []
 for k, v in config.items(): # seems to follow the order in which steps are written
     # Read SQL
     for item in v: # TODO: make multithread
-        with open(f'sample_code/sql/{item}', 'r') as f: # can use jinja --> difficult for user ?
+        with open(f"{args_dict['custom_code_path']}/sql/{item}", 'r') as f: # can use jinja --> difficult for user ?
             # TODO: replace with regex find/replace so user can write non-templatized query
             sql = ' '.join(f.readlines()).replace('PROJECT_ID', args_dict['project'])\
                 .replace('SOURCE_DATASET_ID', args_dict['source_dataset'])\

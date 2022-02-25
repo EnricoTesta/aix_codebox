@@ -19,12 +19,20 @@ parser.add_argument(
     metavar='user_dataset',
     default='sFzcFP17ZqWnduyad7S3pUlpEBh2',
     help='User dataset name')
+parser.add_argument(
+    '--custom-code-path',
+    metavar='custom_code_path',
+    default='',
+    help='Custom code path')
 
 args_dict = vars(parser.parse_args())
 
 
-with open('sample_code/sql/dependencies.yaml', 'r') as f:
-    config = safe_load(f)
+try:
+    with open(f"{args_dict['custom_code_path']}/sql/dependencies.yaml", 'r') as f:
+        config = safe_load(f)
+except FileNotFoundError:
+    raise FileNotFoundError
 
 client = bigquery.Client()
 

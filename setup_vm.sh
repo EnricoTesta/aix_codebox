@@ -15,7 +15,7 @@ wget https://bootstrap.pypa.io/get-pip.py
 python3.7 get-pip.py
 update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.7 1
-
+pip install google-cloud-bigquery
 
 # Get codebox
 gsutil -m rsync -r gs://mockcustomer-data-bucket/codebox /codebox

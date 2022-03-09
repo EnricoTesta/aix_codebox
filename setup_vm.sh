@@ -6,6 +6,9 @@ mkdir /codebox
 mkdir /input
 mkdir /output
 
+# Install unzip
+apt-get install unzip
+
 # Install Python 3.7 (includes PyYAML 3.12)
 apt-get update -y
 apt install software-properties-common

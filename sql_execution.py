@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from yaml import safe_load
 from google.cloud import bigquery
+import os
 
 
 parser = ArgumentParser()
@@ -29,7 +30,7 @@ args_dict = vars(parser.parse_args())
 
 
 try:
-    with open(f"{args_dict['custom_code_path']}/sql/dependencies.yaml", 'r') as f:
+    with open(os.path.join(args_dict['custom_code_path'], "sql/dependencies.yaml"), 'r') as f:
         config = safe_load(f)
 except FileNotFoundError:
     raise FileNotFoundError
@@ -40,7 +41,7 @@ job_list = []
 for k, v in config.items(): # seems to follow the order in which steps are written
     # Read SQL
     for item in v: # TODO: make multithread
-        with open(f"{args_dict['custom_code_path']}/sql/{item}", 'r') as f: # can use jinja --> difficult for user ?
+        with open(os.path.join(args_dict['custom_code_path'], f"sql/{item}"), 'r') as f: # can use jinja --> difficult for user ?
             # TODO: replace with regex find/replace so user can write non-templatized query
             sql = ' '.join(f.readlines()).replace('PROJECT_ID', args_dict['project'])\
                 .replace('SOURCE_DATASET_ID', args_dict['source_dataset'])\

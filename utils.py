@@ -57,7 +57,7 @@ def get_missing_packages(required_packages=None, available_packages=None):
 def get_custom_module_name(code_directory=None):
     dirs = []
     for dir in os.listdir(code_directory):
-        if os.path.isdir(os.path.join(code_directory, dir)):
+        if os.path.isdir(os.path.join(code_directory, dir)) and not dir.endswith('sql'): # ignore sql code directory
             dirs.append(os.path.join(code_directory, dir))
     if len(dirs) > 1 or len(dirs) == 0:
         raise ValueError(f"Should find a single directory in path. Found {len(dirs)}")

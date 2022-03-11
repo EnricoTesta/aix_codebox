@@ -3,8 +3,7 @@
 # Google SDK installed by default on GCP VMs. Choose ubuntu 18.04 LTS as base image.
 # Make directories
 mkdir /codebox
-mkdir /input
-mkdir /output
+mkdir /user_workarea
 
 # Install unzip
 apt-get install unzip

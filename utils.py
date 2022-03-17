@@ -12,7 +12,7 @@ def get_codebox_args():
     parser = ArgumentParser()
     parser.add_argument(
         '--config-file-uri',
-        default= './config.yaml',
+        default= './config/process_config.yaml',
         help='Absolute path to configuration file.')
 
     return vars(parser.parse_args())

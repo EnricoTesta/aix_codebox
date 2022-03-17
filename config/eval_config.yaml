@@ -1,0 +1,6 @@
+input_directory: '/user_workarea/output'
+output_directory: '/user_workarea/eval/output'
+custom_code_directory: '/user_workarea/code'
+repo_directory: '/user_workarea/repo'
+log_directory: '/user_workarea/logs'
+run_mode: 'transform'

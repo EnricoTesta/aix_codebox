@@ -1,4 +1,4 @@
-input_directory: '/user_workarea/output'
+input_directory: '/user_workarea/eval'
 output_directory: '/user_workarea/eval/output'
 custom_code_directory: '/user_workarea/code'
 repo_directory: '/user_workarea/repo'

@@ -12,7 +12,14 @@ with open(config_file_uri, 'r') as f:
     args_dict = safe_load(f)
 # TODO: trace execution metadata (timing, memory, ...)
 
-basicConfig(filename=os.path.join(args_dict['log_directory'], 'logs.log'),
+if args_dict['run_mode'] == 'process':
+    log_file_name = 'process_logs.log'
+elif args_dict['run_mode'] == 'transform':
+    log_file_name = 'transform_logs.log'
+else:
+    raise ValueError(f"Run mode can be either 'process' or 'transform'. Got {args_dict['run_mode']}.")
+
+basicConfig(filename=os.path.join(args_dict['log_directory'], log_file_name),
                     filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=DEBUG)

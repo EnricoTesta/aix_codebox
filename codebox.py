@@ -29,7 +29,7 @@ logger.info(f"Current directory is {os.getcwd()}")
 
 identity_check = run('whoami', shell=True, capture_output=True)
 current_user = identity_check.stdout.decode('utf-8').replace('\n', '')
-logger.info(f"Currently user is {current_user}...")
+logger.info(f"Current user is {current_user}...")
 
 # STEP 3 - pip install to ensure requirements are fullfilled
 # Using "sudo -H python -m pip" makes packages install globally (i.e. they can be used also by other users)

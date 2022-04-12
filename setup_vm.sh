@@ -8,6 +8,12 @@ mkdir /user_workarea
 # Install unzip
 apt-get install unzip
 
+# Install requirements for LightGBM (OSError: libgomp.so.1: cannot open shared object file: No such file or directory)
+apt-get update -y
+apt-get install -y --no-install-recommends apt-utils
+apt-get -y install curl
+apt-get install libgomp1
+
 # Install Python 3.7 (includes PyYAML 3.12)
 apt-get update -y
 apt install software-properties-common

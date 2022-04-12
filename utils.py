@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from subprocess import run, CalledProcessError
 from tempfile import TemporaryDirectory
+import zipfile
 import os
 
 
@@ -29,6 +30,10 @@ def get_required_packages(source_url=None, environment='GCP'):
     if environment == 'GCP':
         with TemporaryDirectory() as tmpdir:
             sync_directory(source_directory=source_url, destination_directory=tmpdir)
+            file_list = [f for f in os.listdir(tmpdir) if os.path.isfile(os.path.join(tmpdir, f))]
+            if len(file_list) == 1 and file_list[0].endswith('zip'):
+                with zipfile.ZipFile(os.path.join(tmpdir, file_list[0]), 'r') as zip_ref:
+                    zip_ref.extractall(tmpdir)
             req_file = [f for f in os.listdir(tmpdir) if os.path.isfile(os.path.join(tmpdir, f)) and f == 'requirements.txt']
             if len(req_file) > 1:
                 raise ValueError("Found more than one requirement file!")
@@ -70,7 +75,7 @@ def sync_directory(source_directory=None, destination_directory=None, recursive=
         else:
             get_input_dir_cmd = f"gsutil -m rsync {source_directory} {destination_directory}"
         try:
-            status = run(get_input_dir_cmd, shell=True, capture_output=False, check=True)
+            status = run(get_input_dir_cmd, shell=True, check=True)
         except CalledProcessError as e:
             return e
     else:

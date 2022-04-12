@@ -45,9 +45,14 @@ if pip_process.returncode != 0:
     logger.error(f"{pip_process.stderr.decode('utf-8')}")
     run('shutdown now', shell=True)
 
-logger.info("Importing custom module...")
-sys.path.append(os.path.join(args_dict['custom_code_directory'], custom_module_name))
-custom_module = import_module("main", package=custom_module_name)
+try:
+    logger.info("Importing custom module...")
+    sys.path.append(os.path.join(args_dict['custom_code_directory'], custom_module_name))
+    custom_module = import_module("main", package=custom_module_name)
+except Exception as e:
+    logger.error("Unable to import custom module")
+    logger.error(f"{str(e)}")
+    run('shutdown now', shell=True)
 
 try:
     logger.info("Fetching function handler...")

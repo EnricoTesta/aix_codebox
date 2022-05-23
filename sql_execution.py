@@ -8,7 +8,7 @@ parser = ArgumentParser()
 parser.add_argument(
     '--project',
     metavar='project',
-    default= 'newco-backend-prod',
+    default='aix-backend-prod',
     help='True data project name')
 parser.add_argument(
     '--source-dataset',

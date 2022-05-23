@@ -26,4 +26,4 @@ update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.7 1
 pip install google-cloud-bigquery
 
 # Get codebox
-gsutil -m rsync -r gs://mockcustomer-data-bucket/codebox /codebox
+gsutil -m rsync -r gs://aix-data-stocks-bucket/codebox /codebox

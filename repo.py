@@ -10,12 +10,12 @@ logger = Logger("Repo_Logger")
 parser = ArgumentParser()
 parser.add_argument(
     '--remote-repo-bucket',
-    default= 'pypi_repo',
+    default='aix_pypi_repo',
     metavar='remote_repo_bucket',
     help='Bucket where remote packages are stored.')
 parser.add_argument(
     '--remote-requirement-directory',
-    default= 'gs://mock_custom_code',
+    default='gs://mock_custom_code',
     metavar='remote_requirement_directory',
     help='Directory containing remote requirement directory.')
 parser.add_argument(
@@ -52,7 +52,7 @@ if missing_packages:
         # To install pip in a specific python environment:
         # 1. curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
         # 2. python3.7 get-pip.py
-        pip_cmd = f"python3.7 -m pip download --only-binary :all: --no-cache-dir --destination-directory {missing_packages_dir} -r {filename}"
+        pip_cmd = f"python3.8 -m pip download --only-binary :all: --no-cache-dir --destination-directory {missing_packages_dir} -r {filename}"
         run(pip_cmd, shell=True)
 
         # Store packages in remote repo

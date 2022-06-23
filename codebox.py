@@ -37,7 +37,10 @@ logger.info(f"Current user is {current_user}...")
 # using setup.py which is useless.
 logger.info("Installing custom code...")
 custom_module_name, custom_module_abs_path = get_custom_module_name(args_dict['custom_code_directory'])
-# pip_cmd = f"sudo -H python -m pip install --no-index --find-links={args_dict['repo_directory']} -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}; sudo -H python -m pip install {args_dict['custom_code_directory']}"
+logger.info(f'Custom module name is: {custom_module_name}')
+logger.info(f'Custom module abs path is: {custom_module_abs_path}')
+
+logger.info(f"Running pip command on {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}...")
 pip_cmd = f"sudo -H python -m pip install --ignore-installed --no-index --find-links={args_dict['repo_directory']} -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}"
 pip_process = run(pip_cmd, shell=True, capture_output=True)
 if pip_process.returncode != 0:

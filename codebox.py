@@ -36,9 +36,14 @@ logger.info(f"Current user is {current_user}...")
 # In this case there is redundancy between setup.py and requirements.txt. Moreover, packages are installed also on current user
 # using setup.py which is useless.
 logger.info("Installing custom code...")
-custom_module_name, custom_module_abs_path = get_custom_module_name(args_dict['custom_code_directory'])
-logger.info(f'Custom module name is: {custom_module_name}')
-logger.info(f'Custom module abs path is: {custom_module_abs_path}')
+try:
+    custom_module_name, custom_module_abs_path = get_custom_module_name(args_dict['custom_code_directory'])
+    logger.info(f'Custom module name is: {custom_module_name}')
+    logger.info(f'Custom module abs path is: {custom_module_abs_path}')
+except Exception as e:
+    logger.error("Unable to get custom module name")
+    logger.error(f"{str(e)}")
+    run('shutdown now', shell=True)
 
 logger.info(f"Running pip command on {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}...")
 pip_cmd = f"sudo -H python -m pip install --ignore-installed --no-index --find-links={args_dict['repo_directory']} -r {os.path.join(args_dict['custom_code_directory'], 'requirements.txt')}"
